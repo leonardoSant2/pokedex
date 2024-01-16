@@ -1,12 +1,37 @@
 <template>
-    <div>
-        <h1>{{num}} {{ upper }}</h1>
-    <small>{{ url }}</small>
+    <div id="pokemon">
+    <div class="card">
+            <div class="card-image">
+                <figure>
+                  <img :src="pokemon.front" alt="Placeholder image">
+                </figure>
+            </div>
+              <div class="card-content">
+                <div class="media">
+                  <div class="media-content">
+                    <p class="title is-4">{{num}} {{ upper }}</p>
+                    <p class="subtitle is-6">{{ this.pokemon.type }}</p>
+                  </div>
+                </div>
+                <div class="content">
+                </div>
+              </div>
+            </div>
     </div>
 </template>
 
 <script>
+import axios from 'axios';
 export default {
+    created: function() {
+        axios.get(this.url).then(res => {
+            this.pokemon.type = res.data.types[0].type.name;
+            this.pokemon.front = res.data.sprites.front_default;
+            this.pokemon.back = res.data.sprites.back_default;
+            this.currentImg = this.pokemon.front;
+            console.log(this.pokemon)
+        })
+    },
     props: {
         num: Number,
         name: String,
@@ -19,6 +44,18 @@ export default {
       return capitalizedFirst + rest;
     }
     },
+    data(){
+        return {
+            isFront: true,
+            currentImg: '',
+            pokemon: {
+                type: '',
+                front: '',
+                back: ''
+            }
+
+        }
+    },
     computed: {
         upper() {
       return this.capitalized(this.name);
@@ -28,5 +65,7 @@ export default {
 </script>
 
 <style>
-
+#pokemon{
+    margin-top: 2%;
+}
 </style>
